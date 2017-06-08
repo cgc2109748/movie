@@ -1,28 +1,15 @@
 <template>
   <div class="layout">
-    <Menu mode="horizontal" active-name="1">
-      <div class="layout-logo">
-        <!-- <img src="static/logo.png"> -->
-      </div>
-      <div class="layout-nav">
-        <Menu-item name="1">
-          <Icon type="ios-navigate"></Icon>
-          导航一
-        </Menu-item>
-        <Menu-item name="2">
-          <Icon type="ios-keypad"></Icon>
-          导航二
-        </Menu-item>
-        <Menu-item name="3">
-          <Icon type="ios-analytics"></Icon>
-          导航三
-        </Menu-item>
-        <Menu-item name="4">
-          <Icon type="ios-paper"></Icon>
-          导航四
-        </Menu-item>
-      </div>
-    </Menu>
+    <el-menu theme="dark" class="el-menu-demo" mode="horizontal">
+      <el-menu-item index="1">导航1</el-menu-item>
+      <el-submenu index="2">
+        <template slot="title">导航2</template>
+        <el-menu-item index="2-1">选项1</el-menu-item>
+        <el-menu-item index="2-2">选项2</el-menu-item>
+        <el-menu-item index="2-3">选项3</el-menu-item>
+      </el-submenu>
+      <el-menu-item index="3"><a href="https://www.ele.me" target="_blank">导航3</a></el-menu-item>
+    </el-menu>
     <!-- <Menu mode="horizontal" active-name="1">
       <div class="layout-assistant">
         <Menu-item name="1">二级导航</Menu-item>
@@ -30,59 +17,72 @@
         <Menu-item name="3">二级导航</Menu-item>
       </div>
     </Menu> -->
-    <Row>
-      <Col span="16" offset="4">
+    <el-row :gutter="16" style="margin: 0;">
+      <el-col :span="16" :offset="4">
         <div class="carousel">
-          <Carousel v-model="carousel">
-            <Carousel-item>
-              <div class="demo-carousel">1</div>
-            </Carousel-item>
-            <Carousel-item>
-              <div class="demo-carousel">2</div>
-            </Carousel-item>
-            <Carousel-item>
-              <div class="demo-carousel">3</div>
-            </Carousel-item>
-            <Carousel-item>
-              <div class="demo-carousel">4</div>
-            </Carousel-item>
-          </Carousel>
+          <el-carousel trigger="click" height="200px">
+            <el-carousel-item v-for="item in 4" :key="item">
+              <div class="demo-carousel">{{item}}</div>
+            </el-carousel-item>
+          </el-carousel>
         </div>
-      </Col>
-      <Col span="4" offset="4">
-        <Menu active-name="1-1" width="auto">
-          <Menu-item name="1-1">导航 1</Menu-item>
-          <Menu-item name="1-2">导航 2</Menu-item>
-          <Menu-item name="1-3">导航 3</Menu-item>
-          <Menu-item name="2-1">导航 4</Menu-item>
-          <Menu-item name="2-2">导航 5</Menu-item>
-        </Menu>
-      </Col>
-      <Col span="12">
-        <div class="layout-content-main">内容区域</div>
-      </Col>
-    </Row>
+      </el-col>
+      <el-col :span="12" :offset="4">
+        <div class="layout-content-main">
+          <movie-list :list="movieList"></movie-list>
+        </div>
+      </el-col>
+      <el-col :span="4">
+        <div class="layout-content-main">
+          广告栏
+        </div>
+      </el-col>
+    </el-row>
 
   </div>
 </template>
 
 <script>
+import MovieList from './MovieList.vue'
 export default {
+  components: {
+    MovieList
+  },
   data () {
     return {
-      carousel: 0
+      carousel: 0,
+      movieList: []
     }
   },
+  mounted () {
+    this.fetchData()
+  },
   methods: {
-
+    fetchData () {
+      let args = {
+        skip: 0,
+        limit: 8
+      }
+      this.axios.post('/api/Movie.Latest', args)
+        .then((res) => {
+          let temp = _.chunk(res.data, 4)
+          for (var i = 0; i < temp.length; i++) {
+            let _temp = _.chunk(temp[i], 2)
+            for (var j = 0; j < _temp.length; j++) {
+              this.movieList.push(_temp[j])
+            }
+          }
+          // this.movieList = res.data
+        })
+    }
   }
 }
 </script>
 
 <style lang="scss">
 .layout{
-  border: 1px solid #d7dde4;
-  background: #f5f7f9;
+  // border: 1px solid #d7dde4;
+  // background: #f5f7f9;
 }
 .layout-logo{
   width: 100px;
@@ -114,9 +114,5 @@ export default {
     font-size: 20px;
     background: #506b9e;
   }
-}
-.layout-content-main{
-  padding: 10px;
-  background: #FFF;
 }
 </style>

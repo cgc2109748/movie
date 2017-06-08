@@ -4,15 +4,19 @@ import Vue from 'vue'
 import App from './App'
 import VueRouter from 'vue-router'
 import router from './router'
-import iView from 'iview'
 import _ from 'lodash'
-import 'iview/dist/styles/iview.css'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-default/index.css'
+import 'font-awesome/scss/font-awesome.scss'
 
 window._ = _
 Vue.config.productionTip = false
 
+Vue.use(VueAxios, axios)
 Vue.use(VueRouter)
-Vue.use(iView)
+Vue.use(ElementUI)
 
 /* eslint-disable no-new */
 new Vue({

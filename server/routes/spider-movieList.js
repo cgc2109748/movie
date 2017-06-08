@@ -177,43 +177,45 @@ function getMovieDetail(url, next) {
           console.log('正在抓取电影:' + _title)
           // 发布时间
           // console.log(_content.match(/发布时间：/))
-          const _updateTime = _content.match(/发布时间：/) === null ? '' : _content.substring(_content.match(/发布时间：/).index + 5, _content.match(/发布时间：/).index + 　15)
+          const _updateTime = _content.match(/发布时间：/) === null ? '-' : _content.substring(_content.match(/发布时间：/).index + 5, _content.match(/发布时间：/).index + 　15)
           // 海报
           const _poster = $($('#Zoom p img')[0]).attr('src')
           // 片名
-          const _name = _zoom.match(/◎片　　名.+?◎/) === null ? '' : _zoom.match(/◎片　　名.+?◎/)[0].replace('◎片　　名', '').replace('◎', '')
+          const _name = _zoom.match(/◎片　　名.+?◎/) === null ? '-' : _zoom.match(/◎片　　名.+?◎/)[0].replace('◎片　　名', '').replace('◎', '')
           // 译名
-          const _translationName = _zoom.match(/◎译　　名.+?◎/) === null ? '' : _zoom.match(/◎译　　名.+?◎/)[0].replace('◎译　　名', '').replace('◎', '')
+          const _translationName = _zoom.match(/◎译　　名.+?◎/) === null ? '-' : _zoom.match(/◎译　　名.+?◎/)[0].replace('◎译　　名', '').replace('◎', '')
           // 年代
-          const _year = _zoom.match(/◎年　　代.+?◎/) === null ? '' : _zoom.match(/◎年　　代.+?◎/)[0].replace('◎年　　代', '').replace('◎', '')
+          const _year = _zoom.match(/◎年　　代.+?◎/) === null ? '-' : _zoom.match(/◎年　　代.+?◎/)[0].replace('◎年　　代', '').replace('◎', '')
           // 产地
-          const _contry = _zoom.match(/◎产　　地.+?◎/) === null ? '' : _zoom.match(/◎产　　地.+?◎/)[0].replace('◎产　　地', '').replace('◎', '')
+          const _contry = _zoom.match(/◎产　　地.+?◎/) === null ? '-' : _zoom.match(/◎产　　地.+?◎/)[0].replace('◎产　　地', '').replace('◎', '')
           // 类别
-          const _type = _zoom.match(/◎类　　别.+?◎/) === null ? '' : _zoom.match(/◎类　　别.+?◎/)[0].replace('◎类　　别', '').replace('◎', '')
+          const _type = _zoom.match(/◎类　　别.+?◎/) === null ? '-' : _zoom.match(/◎类　　别.+?◎/)[0].replace('◎类　　别', '').replace('◎', '')
           // 语言
-          const _language = _zoom.match(/◎语　　言.+?◎/) === null ? '' : _zoom.match(/◎语　　言.+?◎/)[0].replace('◎语　　言', '').replace('◎', '')
+          const _language = _zoom.match(/◎语　　言.+?◎/) === null ? '-' : _zoom.match(/◎语　　言.+?◎/)[0].replace('◎语　　言', '').replace('◎', '')
           // 字幕
-          const _subtitle = _zoom.match(/◎字　　幕.+?◎/) === null ? '' : _zoom.match(/◎字　　幕.+?◎/)[0].replace('◎字　　幕', '').replace('◎', '')
+          const _subtitle = _zoom.match(/◎字　　幕.+?◎/) === null ? '-' : _zoom.match(/◎字　　幕.+?◎/)[0].replace('◎字　　幕', '').replace('◎', '')
           // IMDb评分
-          const _IMDBstars = _zoom.match(/◎IMDb评分.+?◎/) === null ? '' : _zoom.match(/◎IMDb评分.+?◎/)[0].replace('◎IMDb评分', '').replace('◎', '')
+          const _IMDBstars = _zoom.match(/◎IMDb评分.+?◎/) === null ? '-' : _zoom.match(/◎IMDb评分.+?◎/)[0].replace('◎IMDb评分', '').replace('◎', '')
+          // 星级
+          const _star = _IMDBstars === '' ? 0 : _IMDBstars.slice(2, 5)
           // 文件格式
-          const _fileType = _zoom.match(/◎文件格式.+?◎/) === null ? '' : _zoom.match(/◎文件格式.+?◎/)[0].replace('◎文件格式', '').replace('◎', '')
+          const _fileType = _zoom.match(/◎文件格式.+?◎/) === null ? '-' : _zoom.match(/◎文件格式.+?◎/)[0].replace('◎文件格式', '').replace('◎', '')
           // 视频尺寸
-          const _videoSize = _zoom.match(/◎视频尺寸.+?◎/) === null ? '' : _zoom.match(/◎视频尺寸.+?◎/)[0].replace('◎视频尺寸', '').replace('◎', '')
+          const _videoSize = _zoom.match(/◎视频尺寸.+?◎/) === null ? '-' : _zoom.match(/◎视频尺寸.+?◎/)[0].replace('◎视频尺寸', '').replace('◎', '')
           // 文件大小
-          const _fileSize = _zoom.match(/◎文件大小.+?◎/) === null ? '' : _zoom.match(/◎文件大小.+?◎/)[0].replace('◎文件大小', '').replace('◎', '')
+          const _fileSize = _zoom.match(/◎文件大小.+?◎/) === null ? '-' : _zoom.match(/◎文件大小.+?◎/)[0].replace('◎文件大小', '').replace('◎', '')
           // 片长
-          const _long = _zoom.match(/◎片　　长.+?◎/) === null ? '' : _zoom.match(/◎片　　长.+?◎/)[0].replace('◎片　　长', '').replace('◎', '')
+          const _long = _zoom.match(/◎片　　长.+?◎/) === null ? '-' : _zoom.match(/◎片　　长.+?◎/)[0].replace('◎片　　长', '').replace('◎', '')
           // 导演
-          const _director = _zoom.match(/◎导　　演.+?◎/) === null ? '' : _zoom.match(/◎导　　演.+?◎/)[0].replace('◎导　　演', '').replace('◎', '')
+          const _director = _zoom.match(/◎导　　演.+?◎/) === null ? '-' : _zoom.match(/◎导　　演.+?◎/)[0].replace('◎导　　演', '').replace('◎', '')
           // 主演
-          const _performers = _zoom.match(/◎主　　演.+?◎/) === null ? '' : _zoom.match(/◎主　　演.+?◎/)[0].replace('◎主　　演', '').replace('◎', '')
+          const _performers = _zoom.match(/◎主　　演.+?◎/) === null ? '-' : _zoom.match(/◎主　　演.+?◎/)[0].replace('◎主　　演', '').replace('◎', '')
           // 简介
-          const _introduction = _zoom.match(/◎简　　介.+?\n/) === null ? '' : _zoom.match(/◎简　　介.+?\n/)[0].replace('◎简　　介', '')
+          const _introduction = _zoom.match(/◎简　　介.+?\n/) === null ? '-' : _zoom.match(/◎简　　介.+?\n/)[0].replace('◎简　　介', '')
           // 图片
-          const _photo = $($('#Zoom p img')[1]).attr('src') === undefined ? '' : $($('#Zoom p img')[1]).attr('src')
+          const _photo = $($('#Zoom p img')[1]).attr('src') === undefined ? '-' : $($('#Zoom p img')[1]).attr('src')
           // url
-          const _urlName = $($('#Zoom table a')[0]).attr('href') === undefined ? '' : $($('#Zoom table a')[0]).attr('href')
+          const _urlName = $($('#Zoom table a')[0]).attr('href') === undefined ? '-' : $($('#Zoom table a')[0]).attr('href')
           // url
           const _url = 'thunder://' + base64.encode64(`AA${$($('#Zoom table a')[0]).attr('href') === undefined ? '' : $($('#Zoom table a')[0]).attr('href')}ZZ`)
           // const _url = $('#Zoom table a').html().match(/dndkdhyu/)
@@ -237,6 +239,7 @@ function getMovieDetail(url, next) {
             photo: _photo,
             urlName: _urlName,
             url: _url,
+            star: _star
           }
 
           Movie.find({

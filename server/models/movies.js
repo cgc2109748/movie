@@ -20,6 +20,7 @@ const movieSchema = mongoose.Schema({
   photo: String,
   urlName: String,
   url: String,
+  star: Number
 })
 
 const Movie = module.exports = mongoose.model('Movie', movieSchema)
