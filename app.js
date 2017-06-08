@@ -12,6 +12,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 const spider = require('./server/routes/spider')
+const spiderMovieList = require('./server/routes/spider-movieList')
 
 // 数据库连接
 db.connection.on("error", function(error) {
@@ -22,6 +23,7 @@ db.connection.on("open", function() {
 })
 
 app.use('/api', spider)
+app.use('/api', spiderMovieList)
 
 const server = app.listen(3000, function () {
 const host = server.address().address

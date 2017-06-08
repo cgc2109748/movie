@@ -15,12 +15,21 @@
     "server": "gulp"
   },
   "dependencies": {
+    "async": "^2.4.1",
     "body-parser": "^1.17.2",
     "browser-sync": "^2.18.12",
+    "cheerio": "^1.0.0-rc.1",
+    "eventproxy": "^0.3.5",
     "gulp": "^3.9.1",
     "gulp-nodemon": "^2.2.1",
+    "iconv-lite": "^0.4.17",
     "iview": "^2.0.0-rc.16",
     "mongoose": "^4.10.5",
+    "node-sass": "^4.5.3",
+    "request": "^2.81.0",
+    "sass-loader": "^6.0.5",
+    "superagent": "^3.5.2",
+    "superagent-charset": "^1.2.0",
     "vue": "^2.3.3",
     "vue-router": "^2.3.1"
   },
