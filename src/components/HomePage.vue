@@ -23,13 +23,13 @@
         </Menu-item>
       </div>
     </Menu>
-    <Menu mode="horizontal" active-name="1">
+    <!-- <Menu mode="horizontal" active-name="1">
       <div class="layout-assistant">
         <Menu-item name="1">二级导航</Menu-item>
         <Menu-item name="2">二级导航</Menu-item>
         <Menu-item name="3">二级导航</Menu-item>
       </div>
-    </Menu>
+    </Menu> -->
     <Row>
       <Col span="16" offset="4">
         <div class="carousel">
@@ -67,7 +67,6 @@
 </template>
 
 <script>
-import {invoke, getApiJson} from '@/api'
 export default {
   data () {
     return {
@@ -75,12 +74,7 @@ export default {
     }
   },
   methods: {
-    spider () {
-      console.log('in!')
-      getApiJson('/api/Spider', {}).then((res) => {
-        console.log('success!')
-      })
-    }
+
   }
 }
 </script>
