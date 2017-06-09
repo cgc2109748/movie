@@ -2,7 +2,9 @@
   <div class="movie-card">
     <el-row :gutter="0">
       <el-col :span="12" v-for="(items, index) in list">
-        <div class="card" v-for="(item, $index) in items" :class="{'right': isRight($index)}">
+        <div class="card" v-for="(item, $index) in items"
+        :class="{'right': isRight($index)}"
+        :style="{'height': cardHeight}">
           <div class="card_img">
             <a class="card_link" href="">
               <img :src="item.poster" alt="">
@@ -12,7 +14,10 @@
             <a class="card_title" href="#" :title="titleHandler(item.title)">{{titleHandler(item.title)}}</a>
             <p class="card_time">{{textHandler(item.long)}}</p>
             <p class="card_option">{{optionHandler(textHandler(item.type))}}</p>
-            <p class="card_rate"></p>
+            <p class="card_rate">
+              <el-rate v-model="item.star" allow-half disabled ></el-rate>
+            </p>
+            <div class="card_rating">{{item.star * 2}}</div>
           </div>
         </div>
       </el-col>
@@ -30,9 +35,24 @@ export default {
   },
   data () {
     return {
+      cardHeight: '212px'
     }
   },
+  mounted () {
+    this.resize()
+  },
   methods: {
+    resize () {
+      const _this = this
+      const width = window.getComputedStyle(document.getElementsByClassName('card')[0]).width
+      _this.cardHeight = Number(width.replace('px', '')) / 2 * 1.25 + 'px'
+      window.onresize = () => {
+        return (() => {
+          const width = window.getComputedStyle(document.getElementsByClassName('card')[0]).width
+          _this.cardHeight = Number(width.replace('px', '')) / 2 * 1.25 + 'px'
+        })()
+      }
+    },
     isRight (index) {
       if (index % 2 !== 0) {
         return true
@@ -59,15 +79,15 @@ export default {
   .card {
     background-color: #dbdee1;
     width: 100%;
-    float: left;
     margin-bottom: 8px;
     height: 212px;
     overflow: hidden;
 
     &.right {
-      float: right;
+      .card_img {
+        float: right;
+      }
     }
-
     .card_img {
       float: left;
       width: 50%;
@@ -138,6 +158,7 @@ export default {
       }
     }
 
+
     .card_info {
       overflow: hidden;
       padding: 17px 17px;
@@ -151,7 +172,10 @@ export default {
       }
 
       p {
-        line-height: 28px;
+        font-size: 15px;
+      line-height: 28px;
+      color: #4c4145;
+      margin-bottom: 28px;
       }
 
       .card_title {
@@ -181,6 +205,47 @@ export default {
           top: 6px;
           left: 0;
         }
+      }
+
+      .card_option {
+        font-size: 13px;
+        margin-bottom: 3px;
+      }
+
+      .card_rate {
+        border: none;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        font: 16px 'aleoregular', sans-serif;
+        color: #4c4145;
+
+        .el-rate__icon {
+          font-size: 12px;
+        }
+      }
+
+      .card_rating {
+        display: block;
+        position: absolute;
+        bottom: 30px;
+        right: 10px;
+        left: auto;
+        width: 47px;
+        height: 47px;
+        padding-top: 10px;
+        -webkit-border-radius: 24px;
+        -moz-border-radius: 24px;
+        border-radius: 24px;
+        background-color: #ffd564;
+        border: solid 3px #fff;
+        font: 16px 'Roboto', sans-serif;
+        color: #4c4145;
+        text-align: center;
+        font-weight: bold;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
       }
     }
   }

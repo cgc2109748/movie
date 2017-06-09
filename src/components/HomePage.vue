@@ -17,15 +17,15 @@
         <Menu-item name="3">二级导航</Menu-item>
       </div>
     </Menu> -->
+    <div class="carousel">
+      <el-carousel trigger="click" height="500px">
+        <el-carousel-item v-for="item in 4" :key="item">
+          <div class="demo-carousel">{{item}}</div>
+        </el-carousel-item>
+      </el-carousel>
+    </div>
     <el-row :gutter="16" style="margin: 0;">
       <el-col :span="16" :offset="4">
-        <div class="carousel">
-          <el-carousel trigger="click" height="200px">
-            <el-carousel-item v-for="item in 4" :key="item">
-              <div class="demo-carousel">{{item}}</div>
-            </el-carousel-item>
-          </el-carousel>
-        </div>
       </el-col>
       <el-col :span="12" :offset="4">
         <div class="layout-content-main">
@@ -104,10 +104,10 @@ export default {
   height: inherit;
 }
 .carousel {
-  margin: 15px 0;
+  // margin: 15px 0;
 
   .demo-carousel {
-    height: 200px;
+    height: 500px;
     line-height: 200px;
     text-align: center;
     color: #fff;

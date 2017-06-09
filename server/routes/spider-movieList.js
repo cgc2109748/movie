@@ -197,7 +197,7 @@ function getMovieDetail(url, next) {
           // IMDb评分
           const _IMDBstars = _zoom.match(/◎IMDb评分.+?◎/) === null ? '-' : _zoom.match(/◎IMDb评分.+?◎/)[0].replace('◎IMDb评分', '').replace('◎', '')
           // 星级
-          const _star = _IMDBstars === '' ? 0 : _IMDBstars.slice(2, 5)
+          const _star = _IMDBstars === '' ? 0 : (parseFloat(_IMDBstars.slice(2, 5)) / 2).toFixed(1)
           // 文件格式
           const _fileType = _zoom.match(/◎文件格式.+?◎/) === null ? '-' : _zoom.match(/◎文件格式.+?◎/)[0].replace('◎文件格式', '').replace('◎', '')
           // 视频尺寸
