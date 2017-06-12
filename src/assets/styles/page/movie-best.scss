@@ -1,0 +1,43 @@
+.movie-best-container {
+  .movie-best {
+    position: relative;
+    margin-top: -100px;
+    z-index: 50;
+
+    .movie-best_rating {
+      background-color: #ffd564;
+      text-align: center;
+      font: 20px 'aleobold', sans-serif;
+      color: #4c4145;
+      text-transform: uppercase;
+      padding-bottom: 25px;
+      padding-top: 26px;
+      position: relative;
+      line-height: 1;
+
+      &:before {
+        content: "";
+        background-image: url("../img/components/stars.svg");
+        background-repeat: no-repeat;
+        height: 20px;
+        left: 50%;
+        margin-left: -205px;
+        position: absolute;
+        top: 27px;
+        width: 95px;
+      }
+
+      &:after {
+        content: "";
+        background-image: url("../img/components/stars.svg");
+        background-repeat: no-repeat;
+        height: 20px;
+        margin-right: -205px;
+        position: absolute;
+        right: 50%;
+        top: 27px;
+        width: 95px;
+      }
+    }
+  }
+}
