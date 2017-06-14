@@ -6,17 +6,19 @@ const async = require('async')
 const eventproxy = require('eventproxy')
 const Movie = require('../models/movies')
 const MovieList = require('../models/movieList')
+const BestMovieList = require('../models/bestMovieList')
 const charset = require('superagent-charset')
 const base64 = require('../utils/base64')
+const moment = require('moment')
 charset(superagent)
 const ep = eventproxy()
 const app = express()
 
 // const baseUrl = 'http://www.dytt8.net' //电影天堂首页链接
-const baseUrl = 'http://www.dytt8.net/html/gndy/dyzz/index.html' //电影天堂首页最新电影列表链接
+const latestMovieBaseUrl = 'http://www.dytt8.net/html/gndy/dyzz/index.html' //电影天堂首页最新电影列表链接
 let latestMovieListLinkArr = [] //存放最新新电影
 let latestMovieLinkArr = [] //存放最新新电影
-let errLength = [] //统计出错的链接数
+let latestMovieErrLength = [] //统计出错的链接数
 
 router.get('/Spider.MovieList', function(req, res, next) {
   //先抓取电影天堂首页
@@ -39,12 +41,12 @@ router.get('/Spider.MovieList', function(req, res, next) {
          *流程控制语句
          *当首页左侧的链接爬取完毕之后，我们就开始爬取里面的详情页
          */
-        ep.emit('get_topic_html', 'get ' + page + ' successful')
+        ep.emit('get_lm_html', 'get ' + page + ' successful')
       })
-  })(baseUrl)
+  })(latestMovieBaseUrl)
 
-  // 命令 ep 重复监听 emit事件(get_topic_html)，当get_topic_html爬取完毕之后执行
-  ep.after('get_topic_html', 1, function(eps) {
+  // 命令 ep 重复监听 emit事件(get_lm_html)，当get_lm_html爬取完毕之后执行
+  ep.after('get_lm_html', 1, function(eps) {
     let concurrencyCount = 0
     let num = -4 //因为是5个并发，所以需要减4
 
@@ -61,7 +63,7 @@ router.get('/Spider.MovieList', function(req, res, next) {
 
           if (err) {
             callback(err, myurl + ' error happened!')
-            errLength.push(myurl)
+            latestMovieErrLength.push(myurl)
             return next(err)
           }
 
@@ -99,7 +101,7 @@ router.get('/Spider.MovieList', function(req, res, next) {
     }, function(err, result) {
       // 爬虫结束后的回调，可以做一些统计结果
       console.log('抓包结束，一共抓取了-->' + latestMovieListLinkArr.length + '页数据')
-      console.log('出错-->' + errLength.length + '条数据')
+      console.log('出错-->' + latestMovieErrLength.length + '条数据')
       console.log('最新电影：==》' + latestMovieLinkArr.length + '部')
       return false
     })
@@ -121,6 +123,52 @@ function getAllLatestMovieLink($) {
       latestMovieListLinkArr.push(url)
     }
   }
+}
+// 获取最热电影列表的所有链接
+function getAllBestMovieLink($) {
+  let listElem = $('#nowplaying .mod-bd .lists .list-item')
+  for (var i = 0; i < listElem.length; i++) {
+    let _id = moment().format('YYYY-MM-DD-') + i
+    let newMovie = {
+      FId: _id,
+      title: $(listElem[i]).attr('data-title') === undefined ? '' : $(listElem[i]).attr('data-title'),
+      year: $(listElem[i]).attr('data-release') === undefined ? '' : $(listElem[i]).attr('data-release'),
+      rate: $(listElem[i]).attr('data-score') === undefined ? '' : $(listElem[i]).attr('data-score'),
+      duration: $(listElem[i]).attr('data-duration') === undefined ? '' : $(listElem[i]).attr('data-duration'),
+      region: $(listElem[i]).attr('data-region') === undefined ? '' : $(listElem[i]).attr('data-region'),
+      director: $(listElem[i]).attr('data-director') === undefined ? '' : $(listElem[i]).attr('data-director'),
+      actors: $(listElem[i]).attr('data-actors') === undefined ? '' : $(listElem[i]).attr('data-actors'),
+      votecount: $(listElem[i]).attr('data-votecount') === undefined ? '' : $(listElem[i]).attr('data-votecount'),
+      subject: $(listElem[i]).attr('data-subject') === undefined ? '' : $(listElem[i]).attr('data-subject'),
+      img: $($('#nowplaying .mod-bd .lists .list-item img')[i]).attr('src')
+    }
+    BestMovieList.find({
+      FId: _id
+    }, (err, res) => {
+      if (!err) {
+        if (res[0] === undefined || res[0].FId === undefined) {
+          BestMovieList.create(newMovie, (error) => {
+            if (!error) {
+              console.log('成功添加最热电影!')
+            } else{
+              console.log(error)
+            }
+          })
+        } else {
+          if (res[0].FId === _id) {
+            BestMovieList.update({
+              FId: _id
+            }, newMovie, (err2, res2)　=> {
+              if (!err2) {
+                console.log('成功更新最热电影!')
+              }
+            })
+          }
+        }
+      }
+    })
+  }
+  // console.log(listElem)
 }
 
 // 获取下载链接
@@ -271,5 +319,98 @@ function getMovieDetail(url, next) {
       }
     })
 }
+
+const bestMovieBaseUrl = 'https://movie.douban.com/cinema/nowplaying/shenzhen/' //豆瓣电影首页
+let bestMovieListLinkArr = [] //存放最新新电影
+let bestMovieLinkArr = [] //存放最新新电影
+let bestMovieErrLength = [] //统计出错的链接数
+
+router.get('/Spider.BestMovie', function(req, res, next) {
+  //先抓取电影天堂首页
+  (function(page) {
+    superagent
+      .get(page)
+      .charset()
+      .end(function(err, sres) {
+        // 常规的错误处理
+        if (err) {
+          console.log('抓取' + page + '这条信息的时候出错了')
+          return next(err)
+        }
+        let $ = cheerio.load(sres.text, {
+          decodeEntities: false
+        })
+        // 有多条电影链接，注意去重
+        getAllBestMovieLink($)
+        /*
+         *流程控制语句
+         *当首页左侧的链接爬取完毕之后，我们就开始爬取里面的详情页
+         */
+        // ep.emit('get_bm_html', 'get ' + page + ' successful')
+      })
+  })(bestMovieBaseUrl)
+
+  // 命令 ep 重复监听 emit事件(get_bm_html)，当get_bm_html爬取完毕之后执行
+  ep.after('get_bm_html', 1, function(eps) {
+    let concurrencyCount = 0
+    let num = -4 //因为是5个并发，所以需要减4
+
+    // 利用callback函数将结果返回去，然后在结果中取出整个结果数组。
+    let fetchUrl = function(myurl, callback) {
+      let fetchStart = new Date().getTime()
+      concurrencyCount++
+      num += 1
+      // console.log('现在的并发数是', concurrencyCount, '，正在抓取的是', myurl)
+      superagent
+        .get(myurl)
+        .charset('gb2312') //解决编码问题
+        .end(function(err, ssres) {
+
+          if (err) {
+            callback(err, myurl + ' error happened!')
+            bestMovieErrLength.push(myurl)
+            return next(err)
+          }
+
+          let time = new Date().getTime() - fetchStart
+          console.log('抓取 ' + myurl + ' 成功', '，耗时' + time + '毫秒')
+          concurrencyCount--
+
+          let $ = cheerio.load(ssres.text)
+
+          // 对获取的结果进行处理函数
+          getMovieLink($, (array) => {
+            // console.log(array)
+            for (var i = 0; i < array.length; i++) {
+              let arr = array[i]
+              if (latestMovieLinkArr.indexOf(arr) === -1) {
+                latestMovieLinkArr.push(arr)
+                Movie.find({address: arr}, (error, result) => {
+                  if(!error) {
+                    if (result[0] === undefined || result[0].address === undefined) {
+                      getMovieDetail(arr, next)
+                    }
+                  }
+                })
+              }
+            }
+          })
+          callback(null)
+        })
+    }
+
+    // 控制最大并发数为5，在结果中取出callback返回来的整个结果数组。
+    // mapLimit(arr, limit, iterator, [callback])
+    async.mapLimit(latestMovieListLinkArr, 5, function(myurl, callback) {
+      fetchUrl(myurl, callback)
+    }, function(err, result) {
+      // 爬虫结束后的回调，可以做一些统计结果
+      console.log('抓包结束，一共抓取了-->' + latestMovieListLinkArr.length + '页数据')
+      console.log('出错-->' + bestMovieErrLength.length + '条数据')
+      console.log('最新电影：==》' + latestMovieLinkArr.length + '部')
+      return false
+    })
+  })
+})
 
 module.exports = router
