@@ -17,12 +17,13 @@
       </el-menu>
     </div>
     <router-view></router-view>
+    <div class="clearfix"></div>
     <footer class="footer-wrapper">
       <el-row>
-        <el-col></el-col>
-        <el-col></el-col>
-        <el-col></el-col>
-        <el-col></el-col>
+        <el-col>1</el-col>
+        <el-col>2</el-col>
+        <el-col>3</el-col>
+        <el-col>4</el-col>
       </el-row>
     </footer>
     <back-top></back-top>

@@ -110,6 +110,10 @@ body {
     }
   }
 
+  .clearfix {
+    clear: both;
+  }
+
   .footer-wrapper {
     background-color: #fafafa;
     background-image: url(../img/components/footer.jpg);

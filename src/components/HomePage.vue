@@ -1,14 +1,14 @@
 <template lang="html">
 <div class="homepage">
   <div class="carousel">
-    <el-carousel trigger="click" height="500px" interval="5000">
+    <el-carousel trigger="click" height="500px" :interval="5000">
       <el-carousel-item v-for="item in posters" :key="item">
         <!-- <div class="demo-carousel">{{item}}</div> -->
         <v-image :src="item.url" style="height: 500px"></v-image>
       </el-carousel-item>
     </el-carousel>
   </div>
-  <el-row :gutter="16" style="margin: 0;">
+  <el-row :gutter="10" style="margin: 0;">
     <el-col :span="16" :offset="4">
       <best :data-json="bestMovieList"></best>
     </el-col>

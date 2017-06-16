@@ -20,7 +20,7 @@
                 <!-- <p>{{item.region}}</p> -->
               </li>
               <li class="last-block">
-                <a class="slide__link" @click="click(item.subject)">更多</a>
+                <a class="slide__link" @click="click(item.FId)">更多</a>
               </li>
             </ul>
           </div>
@@ -63,9 +63,11 @@ export default {
       }
     },
     click (id) {
-      this.$router.push('/detail', {
+      this.$router.push({
+        path: '/detail',
         query: {
-          id: id
+          id: id,
+          type: 'best'
         }
       })
     }
