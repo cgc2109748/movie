@@ -70,9 +70,15 @@ export default {
             }
           }
         })
-      this.axios.post('/api/Movie.Best')
+      // 豆瓣电影正在热映
+      // this.axios.get('http://api.douban.com/v2/movie/nowplaying?apikey=0df993c66c0c636e29ecbb5344252a4a')
+      //   .then((res) => {
+      //     debugger
+      //     this.bestMovieList = res.entries
+      //   })
+      this.$jsonp('http://api.douban.com/v2/movie/nowplaying?apikey=0df993c66c0c636e29ecbb5344252a4a')
         .then((res) => {
-          this.bestMovieList = res.data
+          this.bestMovieList = res.entries
         })
     }
   }

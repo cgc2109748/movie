@@ -5,6 +5,7 @@ import App from './App'
 import VueRouter from 'vue-router'
 import router from './router'
 import _ from 'lodash'
+import VueJsonp from 'vue-jsonp'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import ElementUI from 'element-ui'
@@ -18,6 +19,7 @@ Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
 Vue.use(VueRouter)
 Vue.use(ElementUI)
+Vue.use(VueJsonp)
 
 /* eslint-disable no-new */
 new Vue({

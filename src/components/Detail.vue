@@ -6,15 +6,15 @@
       <div class="movie-detail_info">
         <el-col :span="8">
           <div class="movie-detail_mainpic">
-            <span class="movie_rating">{{dataJson.rate}}</span>
-            <img :src="dataJson.mainpic" alt="">
+            <span class="movie_rating">{{dataJson.rating.average}}</span>
+            <img :src="dataJson.images.large" alt="">
           </div>
         </el-col>
         <el-col :span="16" id="info"></el-col>
         <el-col :span="24">
           <h2 class="heading" style="marginTop: 15px">剧情简介</h2>
           <div class="introduction">
-            <div class="">{{dataJson.introduction}}</div>
+            <div class="">{{dataJson.summary}}</div>
           </div>
         </el-col>
         <el-col :span="24">
@@ -31,7 +31,9 @@
     </div>
   </el-col>
   <el-col :span="6">
-    <div class="advertisment">广告</div>
+    <div class="layout-content-main advertisements">
+      <div class="advertisement" v-for="item in 3">广告</div>
+    </div>
   </el-col>
 </section>
 </template>
@@ -53,11 +55,16 @@ export default {
   },
   methods: {
     fetchBestMovieData (callback) {
-      this.axios.post('api/Movie.GetBestMovie', {id: this.$route.query.id})
+      // this.axios.post('api/Movie.GetBestMovie', {id: this.$route.query.id})
+      //   .then((res) => {
+      //     this.dataJson = res.data[0]
+      //     document.getElementById('info').innerHTML = this.dataJson.info
+      //     this.afterLoadBestMovie()
+      //   })
+      const _this = this
+      _this.$jsonp(`https://api.douban.com/v2/movie/subject/${_this.$route.query.id}`)
         .then((res) => {
-          this.dataJson = res.data[0]
-          document.getElementById('info').innerHTML = this.dataJson.info
-          this.afterLoadBestMovie()
+          this.dataJson = res
         })
     },
     afterLoadBestMovie () {
@@ -105,8 +112,8 @@ export default {
   margin-left: auto;
   position: relative;
 
-  .advertisment {
-    margin-top: 106px;
+  .advertisements {
+    margin-top: 159px;
   }
 }
 
@@ -165,6 +172,21 @@ export default {
         line-height: 28px;
         color: #4c4145;
         margin: 0 0 10px;
+      }
+
+      span[property="v:runtime"] {
+        position: relative;
+        // color: #fe505a;
+        padding-left: 20px;
+
+        &:before {
+          content: "\f017";
+          font: 16px "FontAwesome";
+          color: #fe505a;
+          position: absolute;
+          top: 1px;
+          left: 1px;
+        }
       }
 
       a {

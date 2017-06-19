@@ -8,19 +8,22 @@
           </div>
         </el-col>
         <el-col :span="24">
-          <div class="movie-beta_item" v-for="item in dataJson" :style="{'height': cardHeight}">
-            <img :src="item.img" alt="" :style="{'height': cardHeight, 'width': '100%'}">
-            <span class="best-rate">{{item.rate}}</span>
+          <div class="movie-beta_item"
+               v-for="(item, index) in dataJson"
+               v-if="index < 6"
+               :style="{'height': cardHeight}">
+            <img :src="item.images.small" alt="" :style="{'height': cardHeight, 'width': '100%'}">
+            <span class="best-rate">{{item.rating}}</span>
             <ul class="movie-beta_info">
-              <li><span class="best-voted">{{item.votecount}} 人评分</span></li>
+              <li><span class="best-voted">{{item.collection}} 人评分</span></li>
               <li>
-                <p class="movie__time">{{item.year}}</p>
-                <p>{{item.duration}}</p>
-                <p>{{item.director}}</p>
+                <p>{{item.title}}</p>
+                <!-- <p>{{item.orignal_title}}</p> -->
+                <p class="movie__time">{{item.pubdate}}</p>
                 <!-- <p>{{item.region}}</p> -->
               </li>
               <li class="last-block">
-                <a class="slide__link" @click="click(item.FId)">更多</a>
+                <a class="slide__link" @click="click(item.id)">更多</a>
               </li>
             </ul>
           </div>
