@@ -11,6 +11,13 @@ router.post('/Movie.Latest', (request, result) => {
     }
   }).sort({'FId': -1}).skip(request.body.skip).limit(request.body.limit)
 })
+router.post('/Movie.getMovie', (request, result) => {
+  Movie.find({FId: request.body.id}, (err, res) => {
+    if (!err) {
+      result.json(res)
+    }
+  })
+})
 
 router.post('/Movie.Best', (request, result) => {
   BestMovieList.find({}, (err, res) => {

@@ -2,7 +2,7 @@
 <section class="detail-container">
   <el-row :gutter="10">
     <el-col :span="18">
-      <div class="movie-detail">
+      <div class="movie-detail" v-if="type === 'best'">
         <h2 class="heading">{{dataJson.title}} ({{dataJson.year}})</h2>
         <div class="movie-detail_info">
           <el-row>
@@ -104,6 +104,82 @@
           </el-col> -->
         </div>
       </div>
+      <div class="movie-detail" v-else>
+        <h2 class="heading">{{dataJson.title}} ({{dataJson.year}})</h2>
+        <div class="movie-detail_info">
+          <el-row>
+            <el-col :span="8">
+              <div class="movie-detail_mainpic">
+                <span class="movie_rating" v-html="dataJson.star"></span>
+                <img :src="dataJson.poster" alt="">
+              </div>
+            </el-col>
+            <el-col :span="16" id="info">
+              <div class="movie__time"><span v-html="dataJson.long"></span></div>
+              <p class="movie__option">
+                <strong>片名: </strong>
+                <a v-html="dataJson.translationName"></a>
+              </p>
+              <p class="movie__option">
+                <strong>导演: </strong>
+                <a v-html="dataJson.director"></a>
+              </p>
+              <p class="movie__option">
+                <strong>主演: </strong>
+                <a v-html="dataJson.performers"></a>
+              </p>
+              <p class="movie__option">
+                <strong>类型: </strong>
+                <span v-html="dataJson.type"></span>
+              </p>
+              <p class="movie__option">
+                <strong>制片国家/地区: </strong>
+                <span v-html="dataJson.contry"></span>
+              </p>
+              <p class="movie__option">
+                <strong>语言: </strong>
+                <span v-html="dataJson.subtitle"></span>
+              </p>
+            </el-col>
+          </el-row>
+          <el-col :span="24">
+            <h2 class="heading" style="marginTop: 15px">剧情简介</h2>
+            <div class="introduction">
+              <div class="">{{dataJson.introduction}}</div>
+            </div>
+          </el-col>
+          <el-col :span="24">
+            <h2 class="heading" style="marginTop: 15px">预告片和剧照</h2>
+            <div class="movie__media">
+              <swiper :options="swiperOption">
+                <swiper-slide>
+                  <a class="movie__media-item" :href="dataJson.photo">
+                    <img :src="dataJson.photo">
+                  </a>
+                </swiper-slide>
+              </swiper>
+            </div>
+          </el-col>
+          <el-col :span="24">
+            <h2 class="heading" style="marginTop: 15px">下载地址</h2>
+            <div class="comment-wrapper">
+              <div class="comment-sets">
+                <div class="comment">
+
+                  <a class="comment__author" :href="dataJson.url">
+                      <el-alert
+                      type="warning"
+                      :closable="false"
+                      :description="dataJson.urlName"
+                      show-icon>
+                    </el-alert>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </el-col>
+        </div>
+      </div>
     </el-col>
     <el-col :span="6">
       <div class="layout-content-main advertisements">
@@ -122,6 +198,7 @@ export default {
   },
   data () {
     return {
+      type: '',
       dataJson: {},
       swiperOption: {
         pagination: '.swiper-pagination',
@@ -151,15 +228,23 @@ export default {
     }
   },
   mounted () {
+    this.type = this.$route.query && this.$route.query.type
     this.fetchBestMovieData()
   },
   methods: {
     fetchBestMovieData (callback) {
       const _this = this
-      _this.$jsonp(`https://api.douban.com/v2/movie/subject/${_this.$route.query.id}?apikey=0df993c66c0c636e29ecbb5344252a4a`)
+      if (this.$route.query && this.$route.query.type === 'best') {
+        _this.$jsonp(`https://api.douban.com/v2/movie/subject/${_this.$route.query.id}?apikey=0df993c66c0c636e29ecbb5344252a4a`)
         .then((res) => {
           this.dataJson = res
         })
+      } else if (this.$route.query && this.$route.query.type === 'list') {
+        this.axios.post('/api/Movie.getMovie', {id: this.$route.query.id})
+          .then((res) => {
+            this.dataJson = res.data[0]
+          })
+      }
     }
   }
 }

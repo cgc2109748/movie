@@ -69,7 +69,14 @@ export default {
     optionHandler (val) {
       return _.join(_.words(val), ' | ')
     },
-    click () {
+    click (item) {
+      this.$router.push({
+        path: '/detail',
+        query: {
+          id: item.FId,
+          type: 'list'
+        }
+      })
     }
   }
 }
