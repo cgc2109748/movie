@@ -6,7 +6,7 @@
         :class="{'right': isRight($index)}"
         :style="{'height': cardHeight}">
           <div class="card_img">
-            <a class="card_link" href="">
+            <a class="card_link" @click="click(item)">
               <img :src="item.poster" alt="">
             </a>
           </div>
@@ -68,6 +68,8 @@ export default {
     },
     optionHandler (val) {
       return _.join(_.words(val), ' | ')
+    },
+    click () {
     }
   }
 }

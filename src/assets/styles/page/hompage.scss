@@ -2,6 +2,29 @@ body {
   margin: 0;
 }
 
+a {
+  font-size: 13px;
+  color: #4c4145;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  color: #428bca;
+  text-decoration: none;
+  background: transparent;
+  cursor: pointer;
+
+  &:focus, &:active, &:hover {
+    outline: 0;
+  }
+}
+
+p {
+  font-size: 15px;
+  line-height: 28px;
+  color: #4c4145;
+  margin-bottom: 28px;
+  margin: 0 0 10px;
+}
+
 .layout {
   .header {
     background: rgba(46, 41, 46, 0.8);
